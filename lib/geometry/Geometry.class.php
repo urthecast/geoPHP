@@ -188,9 +188,9 @@ abstract class Geometry
     }
   }
 
-  public function buffer($distance) {
+  public function buffer($distance, $options = array()) {
     if ($this->geos()) {
-      return geoPHP::geosToGeometry($this->geos()->buffer($distance));
+      return geoPHP::geosToGeometry($this->geos()->buffer($distance, $options));
     }
   }
 
