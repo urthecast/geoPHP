@@ -35,7 +35,7 @@ class geoPHP
 {
 
   static function version() {
-    return '1.1';
+    return '1.2';
   }
 
   // geoPHP::load($data, $type, $other_args);
@@ -69,7 +69,6 @@ class geoPHP
 
     if (!$processor_type) {
       throw new exception('geoPHP could not find an adapter of type '.htmlentities($type));
-      exit;
     }
 
     $processor = new $processor_type();
@@ -78,7 +77,7 @@ class geoPHP
     if (!is_array($data)) {
       $result = call_user_func_array(array($processor, "read"), array_merge(array($data), $args));
     }
-    // Data is an array, combine all passed in items into a single geomtetry
+    // Data is an array, combine all passed in items into a single geometry
     else {
       $geoms = array();
       foreach ($data as $item) {
@@ -97,6 +96,7 @@ class geoPHP
       'wkb' =>  'WKB',
       'ewkb' => 'EWKB',
       'json' => 'GeoJSON',
+      'geojson' => 'GeoJSON',
       'kml' =>  'KML',
       'gpx' =>  'GPX',
       'georss' => 'GeoRSS',
@@ -233,7 +233,8 @@ class geoPHP
 
     // First char is a tab, space or carriage-return. trim it and try again
     if ($bytes[1] == 9 || $bytes[1] == 10 || $bytes[1] == 32) {
-      return geoPHP::detectFormat(ltrim($input));
+      $ltinput = ltrim($input);
+      return geoPHP::detectFormat($ltinput);
     }
 
     // Detect WKB or EWKB -- first byte is 1 (little endian indicator)
